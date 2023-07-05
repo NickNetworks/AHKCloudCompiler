@@ -1,5 +1,7 @@
 # AHK Cloud Compiler
 
+![image](screenshot.png)
+
 This project is a web application that provides a GUI to compile AutoHotkey scripts to EXE files with various configurations. The project is built using Python Flask and uses the AutoHotkey Compiler (Ahk2Exe) to perform the compilation.
 
 The application has support for various compression levels (no compression, MPRESS compression, and UPX compression), and different AHK variants. It also allows for specifying the codepage and resource ID. All these options can be selected through a form when submitting the code for compilation.
@@ -30,8 +32,9 @@ Here's what each option does:
 * `captcha`: If this is set to true, the application will use captcha verification before compiling the script. `(Note: This feature is not yet implemented)`
 You can modify these options as per your requirements.
 
-## Note
-This project is set up to be run on a Windows system because of its use of the AutoHotkey Compiler. The compiler will be run using wineconsole if the project is run on a non-Windows system, and set `os.environ["DISPLAY"] = ":0.0"` however it may require additional setup not covered in this README depending on your enviroment. It was breifly tested on Linux Mint 21 (Cinnamon) and Ubuntu Server 21 
+## Footnotes
+* This project is set up to be run on a Windows system because of its use of the AutoHotkey Compiler. The compiler will be run using wineconsole if the project is run on a non-Windows system, and set `os.environ["DISPLAY"] = ":0.0"` however it may require additional setup not covered in this README depending on your enviroment. It was breifly tested on Linux Mint 21 (Cinnamon) and Ubuntu Server 21 
+* There are some stipulations as to which versions of AHK are supported by the most recent version of Ahk2Exe. tl;dr no 1.0 version are supported, for more information about those stipulations please see [here](https://github.com/AutoHotkey/Ahk2Exe/issues/98) 
 
 ## Dependencies
 * flask

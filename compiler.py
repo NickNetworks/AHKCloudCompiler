@@ -21,6 +21,14 @@ import hashlib
 # /silent: Runs the compilation process silently without displaying output. Optionally, /verbose can be added to display verbose output.
 # /gui: Forces the script to use a GUI (Graphical User Interface) when compiling.
 
+
+# AutoHotkey has three main versions: 1.0, 1.1, and 2.0. The last 1.0 version, 1.0.48.05, 
+# used its own Ahk2Exe compiler, distinct from the current v1.1 and 2.0 Ahk2Exe.
+# AHK 1.1 and 2.0 have enhancements, from versions 1.1.34.00 and 2.0-a135 respectively,
+# to use AutoHotkey*.exe files as base files for compilation, while older versions only
+# used *.bin files. The latest Ahk2Exe v1.1 is capable of compiling all 
+# v1.1.xx.xx and v2.xx.xx.xx scripts and is usually the most bug-free
+
 class Compiler:
     def __init__(self, ahk, config):
         self.batch = None
