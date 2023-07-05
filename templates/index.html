@@ -27,6 +27,12 @@
             margin:5px;
         }
 
+        img {
+            width:128px;
+            display:flex;
+            margin:auto;
+        }
+
         .top-bar {
             background: #666;
             border-radius: 15px;
@@ -243,6 +249,7 @@
 </head>
 
 <body>
+    <img width=128 height=128 src="{{ url_for('static', filename='icon.png') }}" />
     <h1>AHK Cloud Compiler</h1>
     <div class="container">
         <form method="POST" onsubmit="validateForm(event)" id="code-form">

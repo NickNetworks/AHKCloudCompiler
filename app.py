@@ -64,9 +64,9 @@ def index():
         return response
     return render_template('index.html', form=form, variants=ahk.variants, config=config.data)
 
-def delete_file(file_path, delay=5):
+def delete_file(file_path):
     # Delay the file deletion by 10 seconds
-    timer = Timer(delay, os.remove, args=(file_path,))
+    timer = Timer(config.data['compile']['remove_delay'] or 5, os.remove, args=(file_path,))
     timer.start()
 
 if __name__ == "__main__":
