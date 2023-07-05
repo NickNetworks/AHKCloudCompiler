@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compiler</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            color: #79b3ff;
+        }
+
+        h1 {
+            text-align:center;
+            margin:35px 0px 0px 0px;
+
+        }
+
+        p {
+            margin:5px;
+        }
+
+        .top-bar {
+            background: #666;
+            border-radius: 15px;
+            padding: 10px;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-row label {
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .form-row input,
+        .form-row select {
+            flex: 1;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+            min-height: 200px;
+            transition: background-color 0.3s ease;
+        }
+
+        textarea:focus {
+            background-color: #f1f1f1;
+        }
+
+        .submit-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .submit-btn:active {
+            background-color: #3e8e41;
+        }
+
+        footer {
+            text-align: center;
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            padding: 10px;
+            margin-left: 0px;
+            background: #666;
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #333;
+                color: white;
+            }
+
+            textarea,
+            .submit-btn {
+                background-color: #555;
+                color: white;
+            }
+
+            textarea:focus {
+                background-color: #444;
+            }
+
+            .submit-btn:hover {
+                background-color: #4f944e;
+            }
+
+            .submit-btn:active {
+                background-color: #478c47;
+            }
+        }
+    </style>
+
+
+    <script>
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        // Function to get a cookie value
+        function getCookie(name) {
+            const cookieName = name + "=";
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i];
+                while (cookie.charAt(0) === " ") {
+                    cookie = cookie.substring(1);
+                }
+                if (cookie.indexOf(cookieName) === 0) {
+                    return cookie.substring(cookieName.length, cookie.length);
+                }
+            }
+            return "";
+        }
+
+        // Function to load the stored variant, compression, and codepage values from cookies
+        function loadStoredValues() {
+            const variantSelect = document.getElementById("variant");
+            const compressSelect = document.getElementById("compress");
+            const resourceIDInput = document.getElementById("resourceid");
+            const cpInput = document.getElementById("cp");
+            const codeTextarea = document.getElementById("code");
+
+            const storedVariant = getCookie("variant");
+            const storedCompress = getCookie("compress");
+            const storedResourceID = getCookie("resourceid");
+            const storedCP = getCookie("cp");
+            const storedCode = getCookie("code");
+
+            if (storedVariant) {
+                variantSelect.value = storedVariant;
+            }
+            if (storedCompress) {
+                compressSelect.value = storedCompress;
+            }
+            if (storedResourceID) {
+                resourceIDInput.value = storedResourceID;
+            }
+            if (storedCP) {
+                cpInput.value = storedCP;
+            }
+            if (storedCode) {
+                codeTextarea.value = storedCode;
+            }
+        }
+
+
+        // Function to save the variant, compression, and codepage values to cookies
+        function saveValuesToCookies() {
+            const variantSelect = document.getElementById("variant");
+            const compressSelect = document.getElementById("compress");
+            const resourceIDInput = document.getElementById("resourceid");
+            const cpInput = document.getElementById("cp");
+            const codeTextarea = document.getElementById("code");
+
+            const selectedVariant = variantSelect.value;
+            const selectedCompress = compressSelect.value;
+            const enteredResourceID = resourceIDInput.value;
+            const enteredCP = cpInput.value;
+            const enteredCode = codeTextarea.value;
+
+            setCookie("variant", selectedVariant, 30);
+            setCookie("compress", selectedCompress, 30);
+            setCookie("resourceid", enteredResourceID, 30);
+            setCookie("cp", enteredCP, 30);
+            setCookie("code", enteredCode, 30);
+        }
+
+
+        function validateForm(event) {
+            event.preventDefault();
+            const textarea = document.getElementById("code");
+            const code = textarea.value.trim();
+
+            // Remove empty lines and lines starting with #
+            const nonEmptyLines = code.split("\n").filter(line => line.trim() !== "" && !line.trim().startsWith(";"));
+
+            if (nonEmptyLines.length === 0) {
+                alert("The textarea is empty. Please enter some code.");
+                return;
+            }
+
+            // Save the values to cookies
+            saveValuesToCookies();
+
+            // Proceed with form submission if validation passes
+            const form = document.getElementById("code-form");
+            form.submit();
+        }
+
+
+        // Load the stored values when the page is loaded
+        window.addEventListener("load", loadStoredValues);
+    </script>
+</head>
+
+<body>
+    <h1>AHK Cloud Compiler</h1>
+    <div class="container">
+        <form method="POST" onsubmit="validateForm(event)" id="code-form">
+            {{ form.csrf_token }}
+            <div class="top-bar">
+                <div class="form-row">
+                    {{ form.variant.label }}
+                    {{ form.variant() }}
+                </div>
+                <div class="form-row">
+                    <div>
+                        {{ form.compress.label }}
+                        {{ form.compress() }}
+                    </div>
+                    <div>
+                        {{ form.resourceid.label }}
+                        {{ form.resourceid() }}
+                    </div>
+                    <div>
+                        {{ form.cp.label }}
+                        {{ form.cp() }}
+                    </div>
+                </div>
+            </div>
+            <p>
+                {{ form.code.label }}
+                {{ form.code(cols=80, rows=10) }}
+            </p>
+            {% if error %}
+            <p>
+                {% for line in error.split("\n") %}
+                {{ line }}<br />
+                {% endfor %}
+            </p>
+            {% endif %}
+
+            <p>
+                {{ form.compile(class="submit-btn") }}
+            </p>
+        </form>
+        <footer>
+            This instance has served <i><b>{{ config['compile']['count'] }}</b></i> compilations.
+            <br />
+            Made by <a href="https://github.com/Nackloose/"><b>Nackloose</b></a>
+            <a href="#">MIT Liscenced</a>
+        </footer>
+    </div>
+</body>
+
+</html>

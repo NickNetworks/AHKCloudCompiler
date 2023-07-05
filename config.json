@@ -1,0 +1,10 @@
+{
+    "version": "1.0",
+    "compile": {
+        "count": 116,
+        "remove_delay": 5,
+        "cache": true
+    },
+    "footer": true,
+    "captcha": false
+}
